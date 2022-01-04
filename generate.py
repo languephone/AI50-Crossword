@@ -119,10 +119,14 @@ class CrosswordCreator():
         print(f"X words: {self.domains[x]}")
         print(f"Y Words: {self.domains[y]}")
 
+        # Define which letter x and y must match on
         intersection_index = self.crossword.overlaps[x, y]
+        
+        # Create set of y letters that x can match with
         compatible_y_values = {word_y[intersection_index[1]] for word_y in self.domains[y]}
         print(f" Intersection: {intersection_index}")
 
+        # For each word in x, check if the intersecting letter exists in any word in y
         for word_x in self.domains[x].copy():
             if word_x[intersection_index[0]] not in compatible_y_values:
                 self.domains[x].remove(word_x)
@@ -142,7 +146,10 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
-        for x in self.crossword.variables:
+        if arcs is None:
+            arcs = [(x, y) for x in self.crossword.variables]
+
+        for (x, y) in arcs:
             neighbors = self.crossword.neighbors(x)
             for y in neighbors:
                 self.revise(x, y)
