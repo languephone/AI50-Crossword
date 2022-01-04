@@ -114,7 +114,24 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        raise NotImplementedError
+        change_flag = False
+
+        print(f"X words: {self.domains[x]}")
+        print(f"Y Words: {self.domains[y]}")
+
+        intersection_index = self.crossword.overlaps[x, y]
+        print(f" Intersection: {intersection_index}")
+
+        for word_x in self.domains[x].copy():
+            compatible_y_values = [word_y[intersection_index[1]] for word_y in self.domains[y]]
+            if word_x[intersection_index[0]] not in compatible_y_values:
+                print(f"Removing: {word_x}")
+                self.domains[x].remove(word_x)
+                change_flag = True
+
+        print(self.domains[x])
+        print(self.domains[y], "\n")
+        return change_flag
 
     def ac3(self, arcs=None):
         """
@@ -125,7 +142,10 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
-        raise NotImplementedError
+        for x in self.crossword.variables:
+            neighbors = self.crossword.neighbors(x)
+            for y in neighbors:
+                self.revise(x, y)
 
     def assignment_complete(self, assignment):
         """
