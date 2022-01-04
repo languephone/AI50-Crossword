@@ -154,12 +154,15 @@ class CrosswordCreator():
                 for y in neighbors:
                     arcs.append((x, y))
 
+        # As long as the arc queue exists, revise domains
         while arcs:
             current_arc = arcs.pop()
             
             if self.revise(*current_arc):
+                # If any domains are length 0, then no solution exists
                 if len(self.domains[current_arc[0]]) == 0:
                     return False
+                # If change has been made to a domain, need to revise neighbors
                 for neighbor in self.crossword.neighbors(current_arc[0]):
                     if neighbor != current_arc[0]:
                         arcs.append((current_arc[0], neighbor))
