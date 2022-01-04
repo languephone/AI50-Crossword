@@ -120,17 +120,17 @@ class CrosswordCreator():
         print(f"Y Words: {self.domains[y]}")
 
         intersection_index = self.crossword.overlaps[x, y]
+        compatible_y_values = {word_y[intersection_index[1]] for word_y in self.domains[y]}
         print(f" Intersection: {intersection_index}")
 
         for word_x in self.domains[x].copy():
-            compatible_y_values = [word_y[intersection_index[1]] for word_y in self.domains[y]]
             if word_x[intersection_index[0]] not in compatible_y_values:
-                print(f"Removing: {word_x}")
                 self.domains[x].remove(word_x)
                 change_flag = True
+                print(f"Removing: {word_x}")
 
-        print(self.domains[x])
-        print(self.domains[y], "\n")
+        print(f"Revised X words: {self.domains[x]}")
+        print(f"Revised Y Words: {self.domains[y]}", "\n")
         return change_flag
 
     def ac3(self, arcs=None):
