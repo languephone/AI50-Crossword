@@ -148,17 +148,21 @@ class CrosswordCreator():
         """
         if arcs is None:
             # Generate complete list of arcs
-            arcs = [self.crossword.neighbors(x) for x in self.crossword.variables]
-            print(arcs)
+            arcs = []
+            for x in self.crossword.variables:
+                neighbors = self.crossword.neighbors(x)
+                for y in neighbors:
+                    arcs.append((x, y))
 
         while arcs:
             current_arc = arcs.pop()
+            
             if self.revise(*current_arc):
                 if len(self.domains[current_arc[0]]) == 0:
                     return False
-                for arc in self.crossword.neighbors(current_arc[0]):
-                    if arc[1] != current_arc[1]:
-                        arcs.append(arc)
+                for neighbor in self.crossword.neighbors(current_arc[0]):
+                    if neighbor != current_arc[0]:
+                        arcs.append((current_arc[0], neighbor))
         return True
 
     def assignment_complete(self, assignment):
