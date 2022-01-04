@@ -121,7 +121,7 @@ class CrosswordCreator():
 
         # Define which letter x and y must match on
         intersection_index = self.crossword.overlaps[x, y]
-        
+
         # Create set of y letters that x can match with
         compatible_y_values = {word_y[intersection_index[1]] for word_y in self.domains[y]}
         print(f" Intersection: {intersection_index}")
@@ -147,12 +147,19 @@ class CrosswordCreator():
         return False if one or more domains end up empty.
         """
         if arcs is None:
-            arcs = [(x, y) for x in self.crossword.variables]
+            # Generate complete list of arcs
+            arcs = [self.crossword.neighbors(x) for x in self.crossword.variables]
+            print(arcs)
 
-        for (x, y) in arcs:
-            neighbors = self.crossword.neighbors(x)
-            for y in neighbors:
-                self.revise(x, y)
+        while arcs:
+            current_arc = arcs.pop()
+            if self.revise(*current_arc):
+                if len(self.domains[current_arc[0]]) == 0:
+                    return False
+                for arc in self.crossword.neighbors(current_arc[0]):
+                    if arc[1] != current_arc[1]:
+                        arcs.append(arc)
+        return True
 
     def assignment_complete(self, assignment):
         """
