@@ -261,7 +261,6 @@ class CrosswordCreator():
                 if result:
                     return result
                 del assignment[var]
-            del assignment[var]
         return None
 
 def main():
