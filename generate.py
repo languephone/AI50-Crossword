@@ -203,8 +203,9 @@ class CrosswordCreator():
             neighbors = self.crossword.neighbors(variable)
             for neighbor in neighbors:
                 intersection_index = self.crossword.overlaps[variable, neighbor]
-                if variable[intersection_index[0]] != neighbor[intersection_index[1]]:
-                    return False
+                if neighbor in assignment:
+                    if assignment[variable][intersection_index[0]] != assignment[neighbor][intersection_index[1]]:
+                        return False
 
     def order_domain_values(self, var, assignment):
         """
@@ -242,12 +243,13 @@ class CrosswordCreator():
 
         # Get next variable to assign
         var = self.select_unassigned_variable(assignment)
+        print(f"Backtracking: solving {var}")
 
         # Check if variable assignment fits specification
         for value in self.order_domain_values(var, assignment):
             print(assignment)
             assignment[var] = value
-            if consistent(assignment):
+            if self.consistent(assignment):
                 result = backtrack(assignment)
                 if result:
                     return result
