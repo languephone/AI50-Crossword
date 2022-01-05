@@ -157,7 +157,7 @@ class CrosswordCreator():
         # As long as the arc queue exists, revise domains
         while arcs:
             current_arc = arcs.pop()
-            
+
             if self.revise(*current_arc):
                 # If any domains are length 0, then no solution exists
                 if len(self.domains[current_arc[0]]) == 0:
@@ -173,9 +173,9 @@ class CrosswordCreator():
         Return True if `assignment` is complete (i.e., assigns a value to each
         crossword variable); return False otherwise.
         """
-
+        # Check for key not existing and key having no value
         for variable in self.crossword.variables:
-            if not len(assignment.get(variable)) > 0:
+            if not assignment.get(variable) or not len(assignment.get(variable)) > 0:
                 return False
 
         return True
@@ -186,7 +186,7 @@ class CrosswordCreator():
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
-        
+
         # Check values are distinct
         if len(set(assignment.values())) != len(assignment.values()):
             return False
