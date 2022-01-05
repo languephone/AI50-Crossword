@@ -186,7 +186,17 @@ class CrosswordCreator():
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
-        raise NotImplementedError
+        
+        # Check values are distinct
+        if len(set(assignment.values())) != len(assignment.values()):
+            return False
+
+        # Check values are correct length
+        for variable in assignment:
+            if len(variable) != self.crossword.variables[variable].length:
+                return False
+
+        # Check no conflicts
 
     def order_domain_values(self, var, assignment):
         """
