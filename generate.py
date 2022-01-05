@@ -192,11 +192,19 @@ class CrosswordCreator():
             return False
 
         # Check values are correct length
-        for variable in assignment:
-            if len(variable) != self.crossword.variables[variable].length:
-                return False
+        for variable in self.crossword.variables:
+            if variable in assignment:
+                if len(assignment[variable]) != variable.length:
+                    return False
 
         # Check no conflicts
+        # For each variable, get neighbors and check if the intersecting letter matches
+        for variable in assignment:
+            neighbors = self.crossword.neighbors(variable)
+            for neighbor in neighbors:
+                intersection_index = self.crossword.overlaps[variable, neighbor]
+                if variable[intersection_index[0]] != neighbor[intersection_index[1]]:
+                    return False
 
     def order_domain_values(self, var, assignment):
         """
