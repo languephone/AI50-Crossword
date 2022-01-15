@@ -223,6 +223,9 @@ class CrosswordCreator():
         ordered_domains = {}
 
         neighbors = self.crossword.neighbors(var)
+        
+        # Any variable in assignment already has a value, so shouldn’t be
+        # counted when determining number of values ruled out
         for neighbor in neighbors.copy():
             if neighbor in assignment:
                 neighbors.remove(neighbor)
