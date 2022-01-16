@@ -116,9 +116,6 @@ class CrosswordCreator():
         """
         change_flag = False
 
-#        print(f"X words: {self.domains[x]}")
-#        print(f"Y Words: {self.domains[y]}")
-
         # Define which letter x and y must match on
         intersection_index = self.crossword.overlaps[x, y]
 
@@ -128,17 +125,12 @@ class CrosswordCreator():
             for word_y in self.domains[y]
         }
 
-#        print(f" Intersection: {intersection_index}")
-
         # For each word in x, check if the intersecting letter exists in any word in y
         for word_x in self.domains[x].copy():
             if word_x[intersection_index[0]] not in compatible_y_values:
                 self.domains[x].remove(word_x)
                 change_flag = True
-#                print(f"Removing: {word_x}")
 
-#        print(f"Revised X words: {self.domains[x]}")
-#        print(f"Revised Y Words: {self.domains[y]}", "\n")
         return change_flag
 
     def ac3(self, arcs=None):
@@ -194,14 +186,12 @@ class CrosswordCreator():
 
         # Check values are distinct
         if len(set(assignment.values())) != len(assignment.values()):
-            print("Consistency: Fails distinct values.")
             return False
 
         # Check values are correct length
         for variable in self.crossword.variables:
             if variable in assignment:
                 if len(assignment[variable]) != variable.length:
-                    print("Consistency: Fails correct length.")
                     return False
 
         # Check no conflicts
@@ -212,7 +202,6 @@ class CrosswordCreator():
                 intersection_index = self.crossword.overlaps[variable, neighbor]
                 if neighbor in assignment:
                     if assignment[variable][intersection_index[0]] != assignment[neighbor][intersection_index[1]]:
-                        print("Consistency: Fails intersecting letter.")
                         return False
 
         return True
@@ -291,15 +280,11 @@ class CrosswordCreator():
 
         # Get next variable to assign
         var = self.select_unassigned_variable(assignment)
-        print(f"Backtracking: solving {var}")
 
         # Check if variable assignment fits specification
         for value in self.order_domain_values(var, assignment):
-            print(f"Backtracking: checking value {value}.")
             assignment[var] = value
-            print(assignment)
             if self.consistent(assignment):
-                print("Assignment is consistent.")
                 result = self.backtrack(assignment)
                 if result:
                     return result
