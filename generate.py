@@ -123,7 +123,11 @@ class CrosswordCreator():
         intersection_index = self.crossword.overlaps[x, y]
 
         # Create set of y letters that x can match with
-        compatible_y_values = {word_y[intersection_index[1]] for word_y in self.domains[y]}
+        compatible_y_values = {
+            word_y[intersection_index[1]]
+            for word_y in self.domains[y]
+        }
+
 #        print(f" Intersection: {intersection_index}")
 
         # For each word in x, check if the intersecting letter exists in any word in y
@@ -164,7 +168,8 @@ class CrosswordCreator():
                     return False
                 # If change has been made to a domain, need to revise neighbors
                 for neighbor in self.crossword.neighbors(current_arc[0]):
-                    if neighbor != current_arc[0]:
+                    # Don't include neighbor if it's part of the current arc
+                    if neighbor != current_arc[1]:
                         arcs.append((current_arc[0], neighbor))
         return True
 
