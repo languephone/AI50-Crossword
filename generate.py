@@ -250,9 +250,26 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
+        
+        ordered_variables = {}
+
         for variable in self.crossword.variables:
             if variable not in assignment:
-                return variable
+                ordered_variables[variable] = {
+                    'name': variable,
+                    'domain': len(self.domains[variable]),
+                    'degree': len(self.crossword.neighbors(variable))
+                }
+
+        # Sort by degree in reverse to establish order of highest degree
+        highest_degree = sorted(ordered_variables,
+            key=lambda x: ordered_variables[x]['degree'], reverse=True)
+
+        # Sort the degree-sorted list by remaining values
+        remaining_values = sorted(highest_degree,
+            key=lambda x: ordered_variables[x]['domain'])
+
+        return remaining_values[0]
 
     def backtrack(self, assignment):
         """
