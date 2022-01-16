@@ -244,7 +244,8 @@ class CrosswordCreator():
                         elimination_count += 1
             ordered_domains[domain] = elimination_count
 
-        return sorted(ordered_domains, key=lambda domain: ordered_domains[domain])
+        return sorted(ordered_domains,
+            key=lambda x: ordered_domains[x])
 
 
     def select_unassigned_variable(self, assignment):
@@ -261,7 +262,6 @@ class CrosswordCreator():
         for variable in self.crossword.variables:
             if variable not in assignment:
                 ordered_variables[variable] = {
-                    'name': variable,
                     'domain': len(self.domains[variable]),
                     'degree': len(self.crossword.neighbors(variable))
                 }
